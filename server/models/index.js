@@ -1,1 +1,1 @@
-exports.cows = require('./cows.js');
+module.exports.cows = require('./cows.js');
