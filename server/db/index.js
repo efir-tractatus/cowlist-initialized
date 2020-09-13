@@ -7,13 +7,13 @@ var connection = mysql.createConnection({
   database: 'cows',
 });
 
-connection.connect({function(err){
+connection.connect(function(err){
     if (err) {
         console.log('Could not connect to the database due to:', err);
         return;
     }
     console.log('Connected to the database')
-})
+});
 
 module.exports.connection = connection;
 
