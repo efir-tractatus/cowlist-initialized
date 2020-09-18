@@ -49,8 +49,8 @@ app.delete('/api/cows/:id', (req, res) => {
   });
 });
 
-app.put('/api/cows/', (req, res) => {
-  models.cows.update(req.body, (err, data) => {
+app.put('/api/cows/:id', (req, res) => {
+  models.cows.put(req.body, (err, data) => {
     if (err) {
       res.sendStatus(500);
     } else {
