@@ -14,12 +14,16 @@ class App extends React.Component {
       cowModal: false,
       newCowName: null,
       newCowDescription: null,
-      updateCow: {},
+      updateCow_id: '',
+      updateCow_name: '',
+      updateCow_description: '',
     };
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.handlePUT = this.handlePUT.bind(this);
   }
 
   componentDidMount() {
@@ -55,6 +59,45 @@ class App extends React.Component {
     }
   }
 
+  handleDelete() {
+    let cowId = this.state.updateCow_id;
+    axios
+      .delete(`/api/cows/` + cowId)
+      .then((response) => {
+        return axios.get('/api/cows/');
+      })
+      .then((response) => {
+        this.setState({
+          cows: response.data,
+          cowModal: false,
+        });
+        console.log(this.state);
+      })
+      .catch((err) => console.log(err));
+  }
+
+  handlePUT() {
+    let cowId = this.state.updateCow_id;
+    let options = {
+      id: this.state.updateCow_id,
+      name: this.state.updateCow_name,
+      description: this.state.updateCow_description,
+    }
+    axios
+      .put(`/api/cows/` + cowId, options)
+      .then((response) => {
+        return axios.get('/api/cows/');
+      })
+      .then((response) => {
+        this.setState({
+          cows: response.data,
+          cowModal: false,
+        });
+        console.log(this.state);
+      })
+      .catch((err) => console.log(err));
+  }
+
   handleChange(event, field) {
     if (field === 'name') {
       this.setState({
@@ -69,30 +112,19 @@ class App extends React.Component {
 
   handleSelect(cow = null) {
     var cowIdx = this.state.cows.findIndex((element) => element.id === cow);
-    var cow = {
-      id: this.state.cows[cowIdx].id,
-      name: this.state.cows[cowIdx].name,
-      description: this.state.cows[cowIdx].description,
-    };
     this.setState({
-      updateCow: cow,
+      updateCow_id: this.state.cows[cowIdx].id,
+      updateCow_name: this.state.cows[cowIdx].name,
+      updateCow_description: this.state.cows[cowIdx].description,
       cowModal: true,
     });
   }
 
   handleUpdate(event, field) {
-    if (field === 'name') {
-      var name = event.target.value;
-    } else if (field === 'description') {
-      var description = event.target.value;
-    }
     this.setState({
-      updateCow: {
-        name: name,
-        description: description
-      }
-    })
-    console.log(this.state.updateCow)
+      [field]: event.target.value,
+    });
+    console.log(this.state);
   }
 
   render() {
@@ -124,8 +156,11 @@ class App extends React.Component {
         </div>
         <Modal cowModal={this.state.cowModal}>
           <CowEntry
-            cow={this.state.updateCow}
+            name={this.state.updateCow_name}
+            description={this.state.updateCow_description}
             handleUpdate={this.handleUpdate}
+            handleDelete={this.handleDelete}
+            handlePUT= {this.handlePUT}
           />
         </Modal>
       </div>

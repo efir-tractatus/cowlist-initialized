@@ -13,10 +13,6 @@ class Modal extends React.Component {
 
 
   componentDidUpdate(prevState, prevProps) {
-    // console.log('PrevState', prevState)
-    // console.log('PrevProps', prevProps)
-    // console.log('Props', this.props)
-    // console.log('State', this.state)
     if (prevProps.cowModal !== this.props.cowModal) {
         modal.appendChild(this.el);
         this.setState({
